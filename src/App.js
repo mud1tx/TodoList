@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import react, { useState } from "react";
+import AddUsers from "./Components/Users/AddUsers";
+import AddList from "./Components/Users/AddList";
 
 function App() {
+  const [initialContent, setContent] = useState([]);
+  const [removal, setRemoval] = useState();
+
+  const contentHandler = (content) => {
+    setRemoval("a");
+    setContent((previous) => {
+      return [...previous, { list: content, id: Math.random().toString() }];
+    });
+  };
+
+  const deleteHandler = (text) => {
+    setContent((previous) => {
+      return previous.filter((li) => li.list !== text);
+    });
+    if (initialContent.length === 1) {
+      setRemoval();
+    }
+    console.log(initialContent.length);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <AddUsers onListSubmit={contentHandler} />
+      {removal && (
+        <AddList contentList={initialContent} onDeleteItem={deleteHandler} />
+      )}
     </div>
   );
 }
